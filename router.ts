@@ -1,103 +1,88 @@
-import usersController from './controllers/users';
-import addressesController from './controllers/addresses';
-// on importe le controller movie
-import moviesController from './controllers/movies';
-import authController from './controllers/auth';
+import gameTypesController from './controllers/gameType';
+import limitYearsController from './controllers/limitYear';
+import videoGamesController from './controllers/videoGame';
 import { Express } from 'express';
 
 const setupRoutes = (server: Express) => {
-  // USERS
-  // get users
-  server.get('/api/users', usersController.getAllUsers);
-  // post users, checking if email is free then adding user
+  // ------ GAMETYPES ------ //
+  //--ALL--
+  server.get('/api/gameTypes', gameTypesController.getAllGameTypes);
+  //--ID--
+  server.get('/api/gameTypes/:idGameType', gameTypesController.getGameTypeById);
+  //--ADD--
   server.post(
-    '/api/users',
-    // valide les données fournies dans la requete
-    usersController.validateUser,
-    // je vérifie que l'email est disponible
-    // aucun utilisateur n'est déjà enregistré
-    usersController.emailIsFree,
-    usersController.addUser
+    '/api/gameTypes',
+    gameTypesController.validateGameTypes,
+    gameTypesController.addGameType
   );
-  // put users, checking if user exists and updates it
+  //--UPDATE--
   server.put(
-    '/api/users/:idUser',
-    authController.getCurrentSession,
-    authController.checkSessionPrivileges,
-    usersController.validateUser,
-    usersController.userExists,
-    usersController.updateUser
+    '/api/gameTypes/:idGameType',
+    gameTypesController.validateGameTypes,
+    gameTypesController.gameTypeExists,
+    gameTypesController.updateGameType
   );
-  // delete user by id
+  //--DELETE--
   server.delete(
-    '/api/users/:idUser',
-    authController.getCurrentSession,
-    authController.checkSessionPrivileges,
-    usersController.userExists,
-    usersController.deleteUser
+    '/api/gameTypes/:idGameType',
+    gameTypesController.gameTypeExists,
+    gameTypesController.deleteGameType
   );
 
-  // LOGIN
-  server.post('/api/login', authController.validateLogin, authController.login);
-
-  // ADDRESSES
-  // get addresses
-  server.get('/api/addresses', addressesController.getAllAddresses);
-  // get address by id
-  server.get('/api/addresses/:idAddress', addressesController.getAddressById);
-
-  // get addresses by user
+  //------ LIMITYEARS -----//
+  //--ALL--
+  server.get('/api/limitYears', limitYearsController.getAllLimitYears);
+  //--ID--
   server.get(
-    '/api/users/:idUser/addresses',
-    usersController.userExists,
-    authController.getCurrentSession,
-    usersController.getAddressesByUser
+    '/api/limitYears/:idLimitYear',
+    limitYearsController.getLimitYearById
   );
-  // delete addresses by user
-  server.delete(
-    '/api/users/:idUser/addresses',
-    authController.getCurrentSession,
-    authController.checkSessionPrivileges,
-    usersController.userExists,
-    usersController.deleteAddressesByUser
-  );
-  // delete address by id
-  server.delete(
-    '/api/addresses/:idAddress',
-    authController.getCurrentSession,
-    authController.checkSessionPrivileges,
-    addressesController.addressExists,
-    addressesController.deleteAddress
-  );
-  // add an address
+  //--ADD--
   server.post(
-    '/api/addresses/',
-    authController.getCurrentSession,
-    authController.checkSessionPrivileges,
-    addressesController.validateAddress,
-    addressesController.addAddress
+    '/api/limitYears',
+    limitYearsController.validateLimitYears,
+    limitYearsController.addLimitYear
   );
-  // put address, checks if an address exists and updates it
+  //--UPDATE--
   server.put(
-    '/api/addresses/:idAddress',
-    authController.getCurrentSession,
-    authController.checkSessionPrivileges,
-    addressesController.addressExists,
-    addressesController.validateAddress,
-    addressesController.updateAddress
+    '/api/limitYears/:idLimitYear',
+    limitYearsController.validateLimitYears,
+    limitYearsController.limitYearExists,
+    limitYearsController.updateLimitYear
+  );
+  //--DELETE--
+  server.delete(
+    '/api/limitYears/:idLimitYear',
+    limitYearsController.limitYearExists,
+    limitYearsController.deleteLimitYear
   );
 
-  // MOVIES
-  // post movies
+  //------ VIDEOGAMES -----//
+  //--ALL--
+  server.get('/api/videoGames', videoGamesController.getAllVideoGames);
+  //--ID--
+  server.get(
+    '/api/videoGames/:idVideoGame',
+    videoGamesController.getVideoGameById
+  );
+  //--ADD--
   server.post(
-    '/api/movies',
-    // valide le film
-    moviesController.validateMovie,
-    // vérifie si le titre est disponible
-    moviesController.movieTitleIsFree,
-    // ajoute le film à la base de données
-    moviesController.addMovie
+    '/api/videoGames',
+    videoGamesController.validateVideoGame,
+    videoGamesController.addVideoGame
+  );
+  //--UPDATE--
+  server.put(
+    '/api/videoGames/:idVideoGame',
+    videoGamesController.validateVideoGame,
+    videoGamesController.videoGameExists,
+    videoGamesController.updateVideoGame
+  );
+  //--DELETE--
+  server.delete(
+    '/api/videoGames/:idVideoGame',
+    videoGamesController.videoGameExists,
+    videoGamesController.deleteVideoGame
   );
 };
-
 export default setupRoutes;

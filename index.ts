@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cookieParser from 'cookie-parser';
 import { handleError } from './helpers/errors';
 import setupRoutes from './router';
@@ -8,12 +8,15 @@ import cors from 'cors';
 const app = express();
 const port = process.env.PORT || 3000;
 
+// CORS : J'autorise localhost:3001 et localhost:3000
 // à faire des requetes axios
 const corsOptions: cors.CorsOptions = {
-  // for cookies
+  origin: [
+    'http://localhost:8001',
+    'http://localhost:8000',
+    'http://localhost:8003',
+  ],
   credentials: true,
-  // must-have for frontend to communicate with API
-  origin: ['https://test-deploy-fullstack.vercel.app', 'http://localhost:3000'],
 };
 
 // middleware cors
@@ -37,7 +40,5 @@ setupRoutes(app);
 app.use(handleError);
 
 app.listen(port, () => {
-  /* eslint-disable no-console */
   console.log(`server is listening on ${port}`);
-  /* eslint-enable no-console */
 });
